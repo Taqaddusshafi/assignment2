@@ -1,9 +1,22 @@
 const { highlightHTMLContent } = require('./test');
+
 test('Highlight a single word', () => {
   const htmlContent = `<p><span>This is a test sentence.</span></p>`;
   const plainText = 'This is a test sentence.';
   const plainTextPositions = [{ word: 'test', start: 10, end: 14 }];
   const expectedHighlightedContent = '<p><span>This is a <mark>test</mark> sentence.</span></p>';
+  const highlightedContent = highlightHTMLContent(htmlContent, plainText, plainTextPositions);
+  expect(highlightedContent).toBe(expectedHighlightedContent);
+});
+test('Highlighting  first and last word', () => {
+  const htmlContent = `<p><span>All all all all</span></p>`;
+  const plainText = 'All all all all';
+  const len=plainText.length;
+  const plainTextPositions = [
+    { word: 'All', start: 0, end: 3 },
+    { word: 'all', start: len-3, end: len }
+  ];
+  const expectedHighlightedContent = '<p><span><mark>All</mark> all all <mark>all</mark></span></p>';
   const highlightedContent = highlightHTMLContent(htmlContent, plainText, plainTextPositions);
   expect(highlightedContent).toBe(expectedHighlightedContent);
 });
@@ -20,6 +33,7 @@ test('Highlight multiple occurrences of the same word', () => {
   const highlightedContent = highlightHTMLContent(htmlContent, plainText, plainTextPositions);
   expect(highlightedContent).toBe(expectedHighlightedContent);
 });
+
 test('Highlight overlapping words', () => {
   const htmlContent = `<p><span>This is a test sentence.</span></p>`;
   const plainText = 'This is a test sentence.';
